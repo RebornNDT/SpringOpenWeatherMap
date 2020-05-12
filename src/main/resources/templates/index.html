@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <title>Demo dự báo thời tiết</title>
+    <style>
+        .form-search {
+            margin-top: 30px;
+        }
+
+        .banner {
+            color: #e9ebec;
+            text-align: center;
+            height: 251px;
+            background: url(https://openweathermap.org/themes/openweathermap/assets/img/slide-1.jpg) no-repeat;
+        }
+
+        .layout-content {
+            margin-top: 30px;
+        }
+
+        #temp-hourly {
+            border-radius: 10px;
+        }
+
+        .table-forecast {
+            margin-top: 65px;
+        }
+
+        .table td {
+            vertical-align: inherit !important;
+        }
+
+        .layout-content {
+            display: none;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 9999;
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            line-height: 30px;
+            background: #f5f5f5;
+            color: #444;
+            cursor: pointer;
+            border: 0;
+            border-radius: 2px;
+            text-decoration: none;
+            transition: opacity 0.2s ease-out;
+            opacity: 0;
+        }
+
+        #back-to-top:hover {
+            background: #e9ebec;
+        }
+
+        #back-to-top.show {
+            opacity: 1;
+        }
+
+        footer {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+            </ul>
+            <!-- <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form> -->
+        </div>
+    </nav>
+    <section class="banner" style="text-align: center;">
+        <br>
+        <br>
+        <h3>DEMO DỰ BÁO THỜI TIẾT</h3>
+        <h3>Dữ liệu thời tiết của hơn 37000 thành phố trên khắp thế giới</h3>
+    </section>
+    <div class="container form-search">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="row">
+                    <input id="input-search" style="margin-bottom: 20px;" class="form-control mr-sm-2 col-12"
+                        type="search" placeholder="Nhập tên thành phố" aria-label="Search">
+                    <button style="background-color: #e96e50; color: white;" class="btn my-2 my-sm-0 col-4"
+                        id="btn-search"><i class="fas fa-search-location"></i> Tìm kiếm</button>
+                    <div class="col-1"></div>
+                    <button class="btn btn-outline-success my-2 my-sm-0 col-7" id="btn-getlocal"><i
+                            class="fas fa-location-arrow"></i> Vị trí hiện tại</button>
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+    <div class="container layout-content">
+        <div class="row">
+            <div class="col-md-12 layout-title">
+                <h2 id="title-layout" style="text-align: center; color: #e96e50; margin-bottom: 20px;">Dự báo thời tiết
+                    hiện tại ở Hà Nội</h2>
+            </div>
+            <div class="col-md-4 layout-current-temp">
+                <h3 class="city-name">Thời tiết ở Hà Nội, VN</h3>
+                <h3 class="city-temp">
+                    <img class="weather-widget__img" src="https://openweathermap.org/img/wn/04n@2x.png"
+                        alt="Weather Hanoi , VN" width="50" height="50">
+                    <p style="display: inline" class="temp-now">28 °C</p>
+                </h3>
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Tốc độ gió</td>
+                            <td id="current-wind-speed">5,1 m / s (120)</td>
+                        </tr>
+                        <tr>
+                            <td>Mây</td>
+                            <td id="current-cloud">Mây tan</td>
+                        </tr>
+                        <tr>
+                            <td>Áp suất</td>
+                            <td id="current-apxuat">1008 Hpa</td>
+                        </tr>
+                        <tr>
+                            <td>Độ ẩm</td>
+                            <td id="current-doam">78%</td>
+                        </tr>
+                        <tr>
+                            <td>Bình minh</td>
+                            <td id="current-binhminh">5h30</td>
+                        </tr>
+                        <tr>
+                            <td>Hoàng hôn</td>
+                            <td id="current-hoanghon">18h35</td>
+                        </tr>
+                        <tr>
+                            <td>Tọa độ</td>
+                            <td id="current-toado">[ 21.02 , 105.84 ]</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <div class="map-hanoi">
+                    <h3>Bản đồ nhiệt tại Hà Nội, VN</h3>
+                    <iframe src="https://vnexpress.net" frameborder="0"></iframe>
+                </div> -->
+            </div>
+            <div class="col-md-8 layout-forecast-5day">
+                <h3 id="title-forecast-5day">Dự báo thời tiết mỗi 3 giờ 5 ngày tiếp theo tại Hà Nội</h3>
+                <table class="table-forecast table">
+                    <tbody id="table-body-forecast5">
+                        <tr>
+                            <td><span>2020-05-11 18:00</span> <img src="https://openweathermap.org/img/wn/10n@2x.png"
+                                    alt=""></td>
+                            <td><span>Nhiệt độ: 28 °C, tốc độ gió: 2.52, m/s, tỉ lệ mây: 52%, áp suất: 1008 hpa</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span>2020-05-11 18:00</span> <img src="https://openweathermap.org/img/wn/10n@2x.png"
+                                    alt=""></td>
+                            <td><span>Nhiệt độ: 28 °C, tốc độ gió: 2.52, m/s, tỉ lệ mây: 52%, áp suất: 1008 hpa</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <p style="text-align: center;">© 2020 Copyright: Lê Anh Đức</p>
+        <p style="text-align: center;">Email: leanhduc9999@gmail.com, 171201239duc@st.utc.edu.vn</p>
+    </footer>
+    <!-- Footer -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        var geo_options = {
+            enableHighAccuracy: true,
+            maximumAge: 30000,
+            timeout: 27000
+        };
+        var dataLocaltion = new Object();
+        function timeStampstoDateTime(timeStamps) {
+            let time = new Date(timeStamps * 1000).toLocaleDateString("vi-VN");
+            let date = new Date(timeStamps * 1000).toLocaleTimeString("vi-VN");
+            let string = time + " " + date;
+            return string;
+        }
+        function temperatureConverter(valNum) {
+            valNum = parseFloat(valNum);
+            return parseInt(valNum - 273.15);
+        }
+        function setValueTableCurrentWeather(result) {
+            $(".city-name").html('Thời tiết ở ' + result.name + ' hiện tại');
+            $("#current-wind-speed").html(result.wind.speed + ' m/s, (' + result.wind.deg + ')');
+            $('.temp-now').html(temperatureConverter(result.main.temp) + ' °C');
+            $("#current-cloud").html(result.clouds.all + ' %');
+            $("#current-apxuat").html(result.main.pressure + ' Hpa');
+            $("#current-doam").html(result.main.humidity + ' %');
+            $("#current-binhminh").html(new Date(result.sys.sunrise * 1000).toLocaleTimeString("vi-VN"));
+            $("#current-hoanghon").html(new Date(result.sys.sunset * 1000).toLocaleTimeString("vi-VN"));
+            $("#current-toado").html('[' + result.coord.lat + ',' + result.coord.lon + ']');
+            $(".weather-widget__img").attr("src", "https://openweathermap.org/img/wn/" + result.weather[0].icon + "@2x.png");
+            $("#title-layout").html('Dự báo thời tiết hiện tại ở ' + result.name);
+            $("#title-forecast-5day").html('Dự báo thời tiết mỗi 3 giờ 5 ngày tiếp theo tại ' + result.name);
+        }
+        function addContentHtmlForForecast(array, html) {
+            array.forEach(forecast => {
+                html += '<tr><td><span>' + timeStampstoDateTime(forecast.dt) + '</span><img src="https://openweathermap.org/img/wn/' + forecast.weather[0].icon + '@2x.png" alt=""></td><td><span>Nhiệt độ: ' + temperatureConverter(forecast.main.temp) + ' °C,tốc độ gió: ' + forecast.wind.speed + ' m/s, độ ẩm: ' + forecast.main.humidity + '%,áp suất: ' + forecast.main.pressure + ' hpa</span></td></tr>';
+            });
+            return html;
+        }
+        function SendParamPosition(position) {
+            let array = [position.coords.latitude, position.coords.longitude];
+            dataLocaltion.lat = array[0];
+            dataLocaltion.lon = array[1];
+        }
+        function geo_error() {
+            alert('Trình duyệt của bạn không hỗ trợ định vị vị trí địa lý!');
+        }
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+        function getMyGeoLocation() {
+            var wpid = navigator.geolocation.getCurrentPosition(SendParamPosition, showError);
+        }
+        $(() => {
+            getMyGeoLocation();
+            if (dataLocaltion.lat != undefined) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/current-weather-by-location',
+                    data: dataLocaltion,
+                    success: result => {
+                        setValueTableCurrentWeather(result);
+                        $(".layout-content").show();
+                    }
+                });
+                $.ajax({
+                    type: 'GET',
+                    url: '/forecast-weather-by-location',
+                    data: dataLocaltion,
+                    success: result => {
+                        let html = "";
+                        let content = addContentHtmlForForecast(result.list, html);
+                        $("#table-body-forecast5").html(content);
+                    }
+                });
+
+            } else {
+                alert('Vui lòng cho phép trình duyệt truy cập vị trí của bạn, sau đó reload trang này!');
+            }
+        });
+        $("#btn-getlocal").click(() => {
+            getMyGeoLocation();
+            if (dataLocaltion.lat != undefined) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/current-weather-by-location',
+                    data: dataLocaltion,
+                    success: result => {
+                        setValueTableCurrentWeather(result);
+                        $(".layout-content").show();
+                    }
+                });
+                $.ajax({
+                    type: 'GET',
+                    url: '/forecast-weather-by-location',
+                    data: dataLocaltion,
+                    success: result => {
+                        let html = "";
+                        let content = addContentHtmlForForecast(result.list, html);
+                        $("#table-body-forecast5").html(content);
+                    }
+                });
+
+            } else {
+                alert('Vui lòng cho phép trình duyệt truy cập vị trí của bạn!');
+            }
+        });
+        $("#btn-search").click(() => {
+            let data1 = new Object();
+            data1.city = $('#input-search').val();
+            if (data1.city != "" || data1.city != null) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/current-weather',
+                    data: data1,
+                    success: result => {
+                        if (result.cod == "200") {
+                            setValueTableCurrentWeather(result);
+                            $(".layout-content").show();
+                        } else {
+                            alert("Không tìm thấy thành phố hoặc địa chỉ bạn vừa nhập, vui lòng kiểm tra lại!");
+                            return;
+                        }
+                    }
+                });
+                $.ajax({
+                    type: 'GET',
+                    url: '/forecast-weather',
+                    data: data1,
+                    success: result => {
+                        let html = "";
+                        let content = addContentHtmlForForecast(result.list, html);
+                        $("#table-body-forecast5").html(content);
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        if ($('#back-to-top').length) {
+            var scrollTrigger = 100, // px
+                backToTop = function () {
+                    var scrollTop = $(window).scrollTop();
+                    if (scrollTop > scrollTrigger) {
+                        $('#back-to-top').addClass('show');
+                    } else {
+                        $('#back-to-top').removeClass('show');
+                    }
+                };
+            backToTop();
+            $(window).on('scroll', function () {
+                backToTop();
+            });
+            $('#back-to-top').on('click', function (e) {
+                e.preventDefault();
+                $('html,body').animate({
+                    scrollTop: 0
+                }, 700);
+            });
+        }
+    </script>
+</body>
+
+</html>

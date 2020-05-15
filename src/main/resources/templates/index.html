@@ -258,9 +258,13 @@
                 if(rain1 == undefined){
                 	rain = '0';
                 }else{
-                	rain = rain1.substr(6,4);
+                	if(rain1.length == 11){
+                        rain = rain1.substr(6,4);
+                    }else{
+                        rain = rain1.substr(6,3);
+                    }
                 }
-                html += '<tr><td><span>' + timeStampstoDateTime(forecast.dt) + '</span><img src="https://openweathermap.org/img/wn/' + forecast.weather[0].icon + '@2x.png" alt=""></td><td><span>Nhiệt độ: ' + temperatureConverter(forecast.main.temp) + ' °C, tốc độ gió: ' + forecast.wind.speed + ' m/s, độ ẩm: ' + forecast.main.humidity + '%, áp suất: ' + forecast.main.pressure + ' hpa, lượng mưa trong 3 tiếng: '+rain+' inch</span></td></tr>';
+                html += '<tr><td><span>' + timeStampstoDateTime(forecast.dt) + '</span><img src="https://openweathermap.org/img/wn/' + forecast.weather[0].icon + '@2x.png" alt=""></td><td><span>Nhiệt độ: ' + temperatureConverter(forecast.main.temp) + ' °C, tốc độ gió: ' + forecast.wind.speed + ' m/s, độ ẩm: ' + forecast.main.humidity + '%, áp suất: ' + forecast.main.pressure + ' hpa, lượng mưa: '+rain+' inch</span></td></tr>';
             });
             return html;
         }

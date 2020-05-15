@@ -4,6 +4,7 @@ public class MainObj {
 	private Double temp;
 	private int pressure;
 	private int humidity;
+	private Double feels_like;
 
 	public MainObj(Double temp, int pressure, int humidity) {
 		super();
@@ -38,6 +39,14 @@ public class MainObj {
 
 	public void setHumidity(int humidity) {
 		this.humidity = humidity;
+	}
+
+	public Double getFeels_like() {
+		return feels_like;
+	}
+
+	public void setFeels_like(Double feels_like) {
+		this.feels_like = feels_like;
 	}
 
 }

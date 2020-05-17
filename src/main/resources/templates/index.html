@@ -71,6 +71,53 @@
         footer {
             margin-top: 30px;
         }
+
+        @media (max-width: 574px) {
+            .ghi-de-row {
+                margin-right: 0px !important;
+                margin-left: 0px !important;
+            }
+        }
+
+        .animate-bottom {
+            position: relative;
+            -webkit-animation-name: animatebottom;
+            -webkit-animation-duration: 1s;
+            animation-name: animatebottom;
+            animation-duration: 1s
+        }
+
+        @-webkit-keyframes animatebottom {
+            from {
+                bottom: -100px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0px;
+                opacity: 1
+            }
+        }
+
+        @keyframes animatebottom {
+            from {
+                bottom: -100px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0;
+                opacity: 1
+            }
+        }
+
+        .loader-animator {
+            margin-top: 50px;
+            display: none;
+        }
+        .spinner-border{
+        	display: none;
+        }
     </style>
 </head>
 
@@ -123,20 +170,25 @@
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <div class="row">
+                <div class="row ghi-de-row">
                     <input id="input-search" style="margin-bottom: 20px;" class="form-control mr-sm-2 col-12"
-                        type="search" placeholder="Nhập tên thành phố" aria-label="Search">
-                    <button style="background-color: #e96e50; color: white;" class="btn my-2 my-sm-0 col-4"
+                        type="search" placeholder="Nhập tên thành phố hoặc địa điểm" aria-label="Search">
+                    <button style="background-color: #e96e50; color: white;" class="btn my-2 my-sm-0 col-sm-4 col-12"
                         id="btn-search"><i class="fas fa-search-location"></i> Tìm kiếm</button>
-                    <div class="col-1"></div>
-                    <button class="btn btn-outline-success my-2 my-sm-0 col-7" id="btn-getlocal"><i
+                    <div class="col-sm-1 col-12"></div>
+                    <button class="btn btn-outline-success my-2 my-sm-0 col-sm-7 col-12" id="btn-getlocal"><i
                             class="fas fa-location-arrow"></i> Vị trí hiện tại</button>
                 </div>
             </div>
             <div class="col-md-4"></div>
         </div>
     </div>
-    <div class="container layout-content">
+    <div class="d-flex justify-content-center loader-animator" id="spinner-bs4">
+        <div class="spinner-border text-info" style="width: 5rem; height: 5rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <div class="container layout-content animate-bottom">
         <div class="row">
             <div class="col-md-12 layout-title">
                 <h2 id="title-layout" style="text-align: center; color: #e96e50; margin-bottom: 20px;">Dự báo thời tiết
@@ -253,18 +305,18 @@
         }
         function addContentHtmlForForecast(array, html) {
             array.forEach(forecast => {
-            	let rain = '';
+                let rain = '';
                 let rain1 = JSON.stringify(forecast.rain);
-                if(rain1 == undefined){
-                	rain = '0';
-                }else{
-                	if(rain1.length == 11){
-                        rain = rain1.substr(6,4);
-                    }else{
-                        rain = rain1.substr(6,3);
+                if (rain1 == undefined) {
+                    rain = '0';
+                } else {
+                    if (rain1.length == 11) {
+                        rain = rain1.substr(6, 4);
+                    } else {
+                        rain = rain1.substr(6, 3);
                     }
                 }
-                html += '<tr><td><span>' + timeStampstoDateTime(forecast.dt) + '</span><img src="https://openweathermap.org/img/wn/' + forecast.weather[0].icon + '@2x.png" alt=""></td><td><span>Nhiệt độ: ' + temperatureConverter(forecast.main.temp) + ' °C, tốc độ gió: ' + forecast.wind.speed + ' m/s, độ ẩm: ' + forecast.main.humidity + '%, áp suất: ' + forecast.main.pressure + ' hpa, lượng mưa: '+rain+' inch</span></td></tr>';
+                html += '<tr><td><span>' + timeStampstoDateTime(forecast.dt) + '</span><img src="https://openweathermap.org/img/wn/' + forecast.weather[0].icon + '@2x.png" alt=""></td><td><span>Nhiệt độ: ' + temperatureConverter(forecast.main.temp) + ' °C, tốc độ gió: ' + forecast.wind.speed + ' m/s, độ ẩm: ' + forecast.main.humidity + '%, áp suất: ' + forecast.main.pressure + ' hpa, lượng mưa: ' + rain + ' inch</span></td></tr>';
             });
             return html;
         }
@@ -279,7 +331,7 @@
         function showError(error) {
             switch (error.code) {
                 case error.PERMISSION_DENIED:
-                    alert("User denied the request for Geolocation.");
+                    alert("Bạn cần cho phép truy cập vị trí để xem thời tiết tại vị trí của bạn!.");
                     break;
                 case error.POSITION_UNAVAILABLE:
                     alert("Location information is unavailable.");
@@ -324,27 +376,39 @@
         });
         $("#btn-getlocal").click(() => {
             if (dataLocaltion.lat != undefined) {
+                $(".layout-content").hide();
+                $("#spinner-bs4").show();
+                $('.spinner-border').show();
                 $.ajax({
                     type: 'GET',
                     url: '/current-weather-by-location',
                     data: dataLocaltion,
                     success: result => {
                         setValueTableCurrentWeather(result);
+                        $('.spinner-border').hide();
+                        $("#spinner-bs4").hide();
+                        $.ajax({
+                            type: 'GET',
+                            url: '/forecast-weather-by-location',
+                            data: dataLocaltion,
+                            success: result => {
+                                let html = "";
+                                let content = addContentHtmlForForecast(result.list, html);
+                                $("#table-body-forecast5").html(content);
+                            }
+                        });
                         $(".layout-content").show();
-                    }
-                });
-                $.ajax({
-                    type: 'GET',
-                    url: '/forecast-weather-by-location',
-                    data: dataLocaltion,
-                    success: result => {
-                        let html = "";
-                        let content = addContentHtmlForForecast(result.list, html);
-                        $("#table-body-forecast5").html(content);
+                    },
+                    error: () => {
+                        $('.spinner-border').hide();
+                        $("#spinner-bs4").hide();
                     }
                 });
 
+
             } else {
+                $('.spinner-border').hide();
+                $("#spinner-bs4").hide();
                 alert('Vui lòng cho phép trình duyệt truy cập vị trí của bạn!');
             }
         });
@@ -352,6 +416,9 @@
             let data1 = new Object();
             data1.city = $('#input-search').val();
             if (data1.city != "" || data1.city != null) {
+                $(".layout-content").hide();
+                $("#spinner-bs4").show();
+                $('.spinner-border').show();
                 $.ajax({
                     type: 'GET',
                     url: '/current-weather',
@@ -359,23 +426,35 @@
                     success: result => {
                         if (result.cod == "200") {
                             setValueTableCurrentWeather(result);
+                            $('.spinner-border').hide();
+                            $("#spinner-bs4").hide();
+                            $.ajax({
+                                type: 'GET',
+                                url: '/forecast-weather',
+                                data: data1,
+                                success: result => {
+                                    let html = "";
+                                    let content = addContentHtmlForForecast(result.list, html);
+                                    $("#table-body-forecast5").html(content);
+                                }
+                            });
                             $(".layout-content").show();
                         } else {
-                            alert("Không tìm thấy thành phố hoặc địa chỉ bạn vừa nhập, vui lòng kiểm tra lại!");
+                            $('.spinner-border').hide();
+                            $("#spinner-bs4").hide();
+                            alert("Không tìm thấy thành phố hoặc địa điểm bạn vừa nhập, vui lòng kiểm tra lại!");
                             return;
                         }
+                    },
+                    error: () => {
+                        $('.spinner-border').hide();
+                        $("#spinner-bs4").hide();
+                        alert("Có lỗi xảy ra, vui lòng thử lại!");
                     }
                 });
-                $.ajax({
-                    type: 'GET',
-                    url: '/forecast-weather',
-                    data: data1,
-                    success: result => {
-                        let html = "";
-                        let content = addContentHtmlForForecast(result.list, html);
-                        $("#table-body-forecast5").html(content);
-                    }
-                });
+
+            }else{
+                alert("Vui lòng nhập thành phố hoặc địa điểm cần tìm!")
             }
         });
     </script>

@@ -22,14 +22,14 @@ public class AutoPost {
        IdMessageRecipient recipient = new IdMessageRecipient(FbToken.USER_ID);
 		String pageAccessToken = FbToken.getPageToken(FbToken.LONG_LIVED_USER_TOKEN);
 		FacebookClient pageClient = new DefaultFacebookClient(pageAccessToken, Version.VERSION_7_0);
-		int temp = (int)(FbToken.get_current_wheather("Hanoi").getMain().getTemp() -272.15);
-		int feel_like = (int)(FbToken.get_current_wheather("Hanoi").getMain().getFeels_like()-272.15);
+		int temp = (int)(FbToken.get_current_wheather("Hanoi").getMain().getTemp() -273.15);
+		int feel_like = (int)(FbToken.get_current_wheather("Hanoi").getMain().getFeels_like()-273.15);
 		int pressure = FbToken.get_current_wheather("Hanoi").getMain().getPressure();
 		int humidity = FbToken.get_current_wheather("Hanoi").getMain().getHumidity();
 		Double speed_wind = FbToken.get_current_wheather("Hanoi").getWind().getSpeed();
 		int visibility = (FbToken.get_current_wheather("Hanoi").getVisibility())/1000;
 		String content = "Thời tiết hiện tại ở Hà Nội: \n"
-				+ "Nhiệt độ: " + temp + "độ C,\n"
+				+ "Nhiệt độ: " + temp + " độ C,\n"
 				+ "Cảm giác như: "+feel_like+" độ C,\n"
 				+ "Độ ẩm: "+humidity+" %,\n"
 				+ "Áp suất: "+pressure+" Hpa,\n"

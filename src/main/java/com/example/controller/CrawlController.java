@@ -26,7 +26,7 @@ public class CrawlController {
 		if(es.hasText()) {
 			model.addAttribute("diadiem",es.get(0).text());
 			Elements locations = doc.select(".panel-heading .smallTxt");
-			model.addAttribute("locationHtml", locations.get(0).html());
+			model.addAttribute("locationHtml", locations.html());
 			Elements tempInforsF = doc.select("#current_conditions-summary .myforecast-current-lrg");
 			model.addAttribute("nhietDoF", tempInforsF.get(0).text());
 			Elements tempInforsC = doc.select("#current_conditions-summary .myforecast-current-sm");
@@ -39,7 +39,13 @@ public class CrawlController {
 			model.addAttribute("apsuathientai",tdsTag.get(5).text());
 			model.addAttribute("diemsuonghientai",tdsTag.get(7).text());
 			model.addAttribute("tamnhinxahientai",tdsTag.get(9).text());
-			model.addAttribute("lancapnhatcuoi",tdsTag.get(11).text());
+			if(tdsTag.size()>12) {
+				model.addAttribute("chisonhiet", tdsTag.get(11).text());
+				model.addAttribute("lancapnhatcuoi",tdsTag.get(13).text());
+			}else {
+				model.addAttribute("chisonhiet", "Không có dữ liệu");
+				model.addAttribute("lancapnhatcuoi",tdsTag.get(11).text());
+			}
 			Elements forecastSevenCards = doc.select("#seven-day-forecast-body #seven-day-forecast-container #seven-day-forecast-list");
 			model.addAttribute("cardSevenForecast",forecastSevenCards.get(0).html());
 			List<RowForecast> Details = new ArrayList<RowForecast>();

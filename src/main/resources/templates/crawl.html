@@ -17,20 +17,24 @@
             height: 251px;
             background: url(https://openweathermap.org/themes/openweathermap/assets/img/slide-1.jpg) no-repeat;
         }
-        .panel-heading{
+
+        .panel-heading {
             margin-top: 30px;
             margin-bottom: 30px;
         }
-        .panel-short-forecast{
+
+        .panel-short-forecast {
             padding-top: 20px;
             overflow-x: auto;
             margin-top: 30px;
-            height: 330px;
+            height: 340px;
         }
-        #seven-day-forecast-list{
+
+        #seven-day-forecast-list {
             width: 1080px;
         }
-        #seven-day-forecast-list li{
+
+        #seven-day-forecast-list li {
             display: inline-block;
             padding: 10px;
             text-align: -webkit-match-parent;
@@ -39,8 +43,30 @@
             font-size: 11px;
             text-align: center;
         }
-        .short-desc{
-        	height: 48px;
+
+        .short-desc {
+            height: 68px;
+        }
+
+        .temp-low {
+            font-weight: bold;
+            font-size: 14px;
+            color: blue;
+        }
+
+        .temp-high {
+            font-weight: bold;
+            font-size: 14px;
+            color: red;
+        }
+
+        .period-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #map {
+            height: 400px;
         }
     </style>
 </head>
@@ -94,78 +120,152 @@
             <div class="panel-heading col-md-12">
                 <div>
                     <b>Thời tiết hiện tại ở</b>
-                    <h2 class="panel-title" th:utext = "${diadiem}">SAN FRANCISCO DOWNTOWN (SFOC1)</h2>
-                    <span class="smallTxt" th:utext = "${locationHtml}"><b>Vĩ độ:&nbsp;</b>37.77056°N <b>Kinh độ:&nbsp;</b>122.42694°W <b>Elev:&nbsp;</b>150ft.</span>
+                    <h2 class="panel-title" th:utext="${diadiem}">SAN FRANCISCO DOWNTOWN (SFOC1)</h2>
+                    <span class="smallTxt" th:utext="${locationHtml}"><b>Vĩ độ:&nbsp;</b>37.77056°N <b>Kinh
+                            độ:&nbsp;</b>122.42694°W <b>Elev:&nbsp;</b>150ft.</span>
                 </div>
             </div>
             <div class="col-md-4">
-                <h3 th:utext = "'Nhiệt độ hiện tại theo độ F: '+${nhietDoF}"></h3>
-                <h3 th:utext = "'Nhiệt độ hiện tại theo độ C: '+${nhietDoC}"></h3>
+                <h3 th:utext="'Nhiệt độ hiện tại theo độ F: '+${nhietDoF}"></h3>
+                <h3 th:utext="'Nhiệt độ hiện tại theo độ C: '+${nhietDoC}"></h3>
             </div>
             <div class="col-md-4">
                 <table class="table table-striped">
                     <tbody>
                         <tr>
                             <td class="text-right"><b>Độ ẩm</b></td>
-                            <td th:utext = "${doamhientai}">92%</td>
+                            <td th:utext="${doamhientai}">92%</td>
                         </tr>
                         <tr>
                             <td class="text-right"><b>Tốc độ gió</b></td>
-                            <td th:utext = "${tocdogiohientai}">NA NA MPH</td>
+                            <td th:utext="${tocdogiohientai}">NA NA MPH</td>
                         </tr>
                         <tr>
                             <td class="text-right"><b>Áp suất</b></td>
-                            <td th:utext = "${apsuathientai}">1018.96 mb</td>
+                            <td th:utext="${apsuathientai}">1018.96 mb</td>
                         </tr>
                         <tr>
                             <td class="text-right"><b>Điểm sương</b></td>
-                            <td th:utext = "${diemsuonghientai}">53°F (12°C)</td>
+                            <td th:utext="${diemsuonghientai}">53°F (12°C)</td>
                         </tr>
                         <tr>
                             <td class="text-right"><b>Tầm nhìn xa</b></td>
-                            <td th:utext = "${tamnhinxahientai}">NA</td>
+                            <td th:utext="${tamnhinxahientai}">NA</td>
                         </tr>
                         <tr>
                             <td class="text-right"><b>Cập nhật lần cuối</b></td>
-                            <td th:utext = "${lancapnhatcuoi}">
+                            <td th:utext="${lancapnhatcuoi}">
                                 18 May 01:43 AM PDT </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            
+
             <!-- <iframe class="col-md-4" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6307.043022764655!2d-122.42094413307721!3d37.777816262937634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808eb456e2dd%3A0xcb1742ab59d38bda!2sCivic%20Center%2C%20San%20Francisco%2C%20California%2094102%2C%20Hoa%20K%E1%BB%B3!5e0!3m2!1svi!2s!4v1589796280883!5m2!1svi!2s" width="400" height="400" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe> -->
-            <iframe class="col-md-4" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d188111.03033837132!2d-74.06989957716138!3d40.68804679291434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2zVGjDoG5oIHBo4buRIE5ldyBZb3JrLCBUaeG7g3UgYmFuZyBOZXcgWW9yaywgSG9hIEvhu7M!5e0!3m2!1svi!2s!4v1589899093844!5m2!1svi!2s" width="400" height="400" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            
+            <!-- <iframe class="col-md-4" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d188111.03033837132!2d-74.06989957716138!3d40.68804679291434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2zVGjDoG5oIHBo4buRIE5ldyBZb3JrLCBUaeG7g3UgYmFuZyBOZXcgWW9yaywgSG9hIEvhu7M!5e0!3m2!1svi!2s!4v1589899093844!5m2!1svi!2s" width="400" height="400" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe> -->
+            <div class=col-md-4>
+				<div id = "map"></div>
+            </div>
             <div class="col-md-12 panel-short-forecast">
-                <ul th:utext = "${cardSevenForecast}" id="seven-day-forecast-list" class="list-unstyled"><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Today<br><br></p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/hi_shwrs50.png" alt="Today: A chance of showers, with thunderstorms also possible after 11am.  Mostly sunny, with a high near 64. West southwest wind around 11 mph.  Chance of precipitation is 50%. New rainfall amounts of less than a tenth of an inch, except higher amounts possible in thunderstorms. " title="Today: A chance of showers, with thunderstorms also possible after 11am.  Mostly sunny, with a high near 64. West southwest wind around 11 mph.  Chance of precipitation is 50%. New rainfall amounts of less than a tenth of an inch, except higher amounts possible in thunderstorms. " class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Chance<br>Showers</p><p class="temp temp-high">High: 64 °F</p></div></li><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Tonight<br><br></p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/hi_nshwrs20.png" alt="Tonight: A 20 percent chance of showers.  Partly cloudy, with a low around 54. West southwest wind 5 to 10 mph becoming light west  after midnight.  New precipitation amounts of less than a tenth of an inch possible. " title="Tonight: A 20 percent chance of showers.  Partly cloudy, with a low around 54. West southwest wind 5 to 10 mph becoming light west  after midnight.  New precipitation amounts of less than a tenth of an inch possible. " class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Slight Chance<br>Showers</p><p class="temp temp-low">Low: 54 °F</p></div></li><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Tuesday<br><br></p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/sct.png" alt="Tuesday: Mostly sunny, with a high near 65. West wind 5 to 15 mph, with gusts as high as 18 mph. " title="Tuesday: Mostly sunny, with a high near 65. West wind 5 to 15 mph, with gusts as high as 18 mph. " class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Mostly Sunny</p><p class="temp temp-high">High: 65 °F</p></div></li><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Tuesday<br>Night</p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/nsct.png" alt="Tuesday Night: Partly cloudy, with a low around 54. West wind 9 to 15 mph, with gusts as high as 20 mph. " title="Tuesday Night: Partly cloudy, with a low around 54. West wind 9 to 15 mph, with gusts as high as 20 mph. " class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Partly Cloudy</p><p class="temp temp-low">Low: 54 °F</p></div></li><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Wednesday<br><br></p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/sct.png" alt="Wednesday: Mostly sunny, with a high near 68. West wind 5 to 11 mph. " title="Wednesday: Mostly sunny, with a high near 68. West wind 5 to 11 mph. " class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Mostly Sunny</p><p class="temp temp-high">High: 68 °F</p></div></li><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Wednesday<br>Night</p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/nfew.png" alt="Wednesday Night: Mostly clear, with a low around 54." title="Wednesday Night: Mostly clear, with a low around 54." class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Mostly Clear</p><p class="temp temp-low">Low: 54 °F</p></div></li><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Thursday<br><br></p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/few.png" alt="Thursday: Sunny, with a high near 68." title="Thursday: Sunny, with a high near 68." class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Sunny</p><p class="temp temp-high">High: 68 °F</p></div></li><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Thursday<br>Night</p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/nfew.png" alt="Thursday Night: Mostly clear, with a low around 52." title="Thursday Night: Mostly clear, with a low around 52." class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Mostly Clear</p><p class="temp temp-low">Low: 52 °F</p></div></li><li class="forecast-tombstone">
-                    <div class="tombstone-container">
-                    <p class="period-name">Friday<br><br></p>
-                    <p><img src="https://forecast.weather.gov/newimages/medium/few.png" alt="Friday: Sunny, with a high near 68." title="Friday: Sunny, with a high near 68." class="forecast-icon"></p><p class="short-desc" style="height: 54px;">Sunny</p><p class="temp temp-high">High: 68 °F</p></div></li></ul>
+                <ul th:utext="${cardSevenForecast}" id="seven-day-forecast-list" class="list-unstyled">
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Today<br><br></p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/hi_shwrs50.png"
+                                    alt="Today: A chance of showers, with thunderstorms also possible after 11am.  Mostly sunny, with a high near 64. West southwest wind around 11 mph.  Chance of precipitation is 50%. New rainfall amounts of less than a tenth of an inch, except higher amounts possible in thunderstorms. "
+                                    title="Today: A chance of showers, with thunderstorms also possible after 11am.  Mostly sunny, with a high near 64. West southwest wind around 11 mph.  Chance of precipitation is 50%. New rainfall amounts of less than a tenth of an inch, except higher amounts possible in thunderstorms. "
+                                    class="forecast-icon"></p>
+                            <p class="short-desc" style="height: 54px;">Chance<br>Showers</p>
+                            <p class="temp temp-high">High: 64 °F</p>
+                        </div>
+                    </li>
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Tonight<br><br></p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/hi_nshwrs20.png"
+                                    alt="Tonight: A 20 percent chance of showers.  Partly cloudy, with a low around 54. West southwest wind 5 to 10 mph becoming light west  after midnight.  New precipitation amounts of less than a tenth of an inch possible. "
+                                    title="Tonight: A 20 percent chance of showers.  Partly cloudy, with a low around 54. West southwest wind 5 to 10 mph becoming light west  after midnight.  New precipitation amounts of less than a tenth of an inch possible. "
+                                    class="forecast-icon"></p>
+                            <p class="short-desc" style="height: 54px;">Slight Chance<br>Showers</p>
+                            <p class="temp temp-low">Low: 54 °F</p>
+                        </div>
+                    </li>
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Tuesday<br><br></p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/sct.png"
+                                    alt="Tuesday: Mostly sunny, with a high near 65. West wind 5 to 15 mph, with gusts as high as 18 mph. "
+                                    title="Tuesday: Mostly sunny, with a high near 65. West wind 5 to 15 mph, with gusts as high as 18 mph. "
+                                    class="forecast-icon"></p>
+                            <p class="short-desc" style="height: 54px;">Mostly Sunny</p>
+                            <p class="temp temp-high">High: 65 °F</p>
+                        </div>
+                    </li>
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Tuesday<br>Night</p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/nsct.png"
+                                    alt="Tuesday Night: Partly cloudy, with a low around 54. West wind 9 to 15 mph, with gusts as high as 20 mph. "
+                                    title="Tuesday Night: Partly cloudy, with a low around 54. West wind 9 to 15 mph, with gusts as high as 20 mph. "
+                                    class="forecast-icon"></p>
+                            <p class="short-desc" style="height: 54px;">Partly Cloudy</p>
+                            <p class="temp temp-low">Low: 54 °F</p>
+                        </div>
+                    </li>
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Wednesday<br><br></p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/sct.png"
+                                    alt="Wednesday: Mostly sunny, with a high near 68. West wind 5 to 11 mph. "
+                                    title="Wednesday: Mostly sunny, with a high near 68. West wind 5 to 11 mph. "
+                                    class="forecast-icon"></p>
+                            <p class="short-desc" style="height: 54px;">Mostly Sunny</p>
+                            <p class="temp temp-high">High: 68 °F</p>
+                        </div>
+                    </li>
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Wednesday<br>Night</p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/nfew.png"
+                                    alt="Wednesday Night: Mostly clear, with a low around 54."
+                                    title="Wednesday Night: Mostly clear, with a low around 54." class="forecast-icon">
+                            </p>
+                            <p class="short-desc" style="height: 54px;">Mostly Clear</p>
+                            <p class="temp temp-low">Low: 54 °F</p>
+                        </div>
+                    </li>
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Thursday<br><br></p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/few.png"
+                                    alt="Thursday: Sunny, with a high near 68."
+                                    title="Thursday: Sunny, with a high near 68." class="forecast-icon"></p>
+                            <p class="short-desc" style="height: 54px;">Sunny</p>
+                            <p class="temp temp-high">High: 68 °F</p>
+                        </div>
+                    </li>
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Thursday<br>Night</p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/nfew.png"
+                                    alt="Thursday Night: Mostly clear, with a low around 52."
+                                    title="Thursday Night: Mostly clear, with a low around 52." class="forecast-icon">
+                            </p>
+                            <p class="short-desc" style="height: 54px;">Mostly Clear</p>
+                            <p class="temp temp-low">Low: 52 °F</p>
+                        </div>
+                    </li>
+                    <li class="forecast-tombstone">
+                        <div class="tombstone-container">
+                            <p class="period-name">Friday<br><br></p>
+                            <p><img src="https://forecast.weather.gov/newimages/medium/few.png"
+                                    alt="Friday: Sunny, with a high near 68."
+                                    title="Friday: Sunny, with a high near 68." class="forecast-icon"></p>
+                            <p class="short-desc" style="height: 54px;">Sunny</p>
+                            <p class="temp temp-high">High: 68 °F</p>
+                        </div>
+                    </li>
+                </ul>
             </div>
             <div class="col-md-12" style="margin-top: 30px;">
                 <!-- <div id="detailed-forecast" class="panel panel-default">
@@ -177,23 +277,23 @@
                 </div> -->
                 <table class="table table-striped">
                     <thead class="thead-light">
-                      <tr>
-                        <h3>Dự báo chi tiết</h3>
-                      </tr>
+                        <tr>
+                            <h3>Dự báo chi tiết</h3>
+                        </tr>
                     </thead>
                     <tbody>
-                    <th:block th:each="detailRow : ${detailsRow}">
-            				<tr>
-                        		<th scope="row" th:utext = "${detailRow.label}">1</th>
-                        		<td th:utext = "${detailRow.detail}">Mark</td>
-                      		</tr>
-        			</th:block>
-                      
-                      
+                        <th:block th:each="detailRow : ${detailsRow}">
+                            <tr>
+                                <th scope="row" th:utext="${detailRow.label}">1</th>
+                                <td th:utext="${detailRow.detail}">Mark</td>
+                            </tr>
+                        </th:block>
+
+
                     </tbody>
-                  </table>
+                </table>
             </div>
-            
+
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -203,6 +303,40 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALyG89PJNAflSxuoi0BFptvSkRdTSjpaA&callback=initMap"
+        async defer></script>
+    <script th:inline="javascript">
+        var map;
+        function initMap() {
+            var lat1 = /*[[${vido}]]*/ 21.03;
+            var lon1 = /*[[${kinhdo}]]*/ 105.97;
+            var myLatLng = { lat: lat1, lng: lon1 };
+            let getForecastWindow =  new google.maps.InfoWindow({position: myLatLng});
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: myLatLng,
+                zoom: 9,
+                gestureHandling: 'cooperative'
+            });
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map
+            });
+            marker.addListener('click', mapsMouseEvent =>{
+            	let infoWindow = new google.maps.InfoWindow({ position: mapsMouseEvent.latLng });
+            	let Content = /*[[${diadiem}]]*/ "New York"
+            	infoWindow.setContent(Content);
+                infoWindow.open(map);
+            });
+            map.addListener('click', mapsMouseEvent => {
+            	getForecastWindow.close();
+                let linkGetLocation = 'https://leanhduc-forecast.herokuapp.com/crawler?lat='+mapsMouseEvent.latLng.lat()+'&lon='+mapsMouseEvent.latLng.lng()
+                getForecastWindow = new google.maps.InfoWindow({ position: mapsMouseEvent.latLng });
+                let ContentHtml = '<a href='+linkGetLocation+' class="btn btn-secondary" role="button" aria-pressed="true">Bấm để xem thời tiết tại vị trí này</a>' 
+                getForecastWindow.setContent(ContentHtml);
+                getForecastWindow.open(map);
+            })
+        }
+    </script>
 </body>
 
 </html>

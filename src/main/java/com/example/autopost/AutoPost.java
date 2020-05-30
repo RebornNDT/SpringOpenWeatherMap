@@ -16,7 +16,7 @@ import com.restfb.types.send.IdMessageRecipient;
 import com.restfb.types.send.SendResponse;
 @Component
 public class AutoPost {
-	@Scheduled( initialDelay = 60 * 1000, fixedDelay = 3 * 60 * 60 * 1000)
+	@Scheduled( initialDelay = 600 * 1000, fixedDelay = 3 * 60 * 60 * 1000)
     public void postCurrentWheather() throws ClientProtocolException, URISyntaxException, IOException {
        System.out.println("Đang chuẩn bị post bài!");
        IdMessageRecipient recipient = new IdMessageRecipient(FbToken.USER_ID);

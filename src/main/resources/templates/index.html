@@ -115,8 +115,13 @@
             margin-top: 50px;
             display: none;
         }
-        .spinner-border{
-        	display: none;
+
+        .spinner-border {
+            display: none;
+        }
+
+        #map {
+            height: 550px;
         }
     </style>
 </head>
@@ -181,6 +186,19 @@
                 </div>
             </div>
             <div class="col-md-4"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 20px; margin-bottom: 20px;">
+                <p style="text-align: center; font-size: 18px; font-weight: 600;">Hoặc chọn vị trí trên bản đồ</p>
+                <div style="margin: auto; width: 139px;">
+                    <button type="button" id="btnToggleMap" class="btn btn-outline-info">Ẩn/Hiện bản đồ</button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div id="map"></div>
+            </div>
         </div>
     </div>
     <div class="d-flex justify-content-center loader-animator" id="spinner-bs4">
@@ -272,6 +290,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALyG89PJNAflSxuoi0BFptvSkRdTSjpaA&callback=initMap"
+        async defer></script>
     <script>
         var geo_options = {
             enableHighAccuracy: true,
@@ -279,6 +299,7 @@
             timeout: 27000
         };
         var dataLocaltion = new Object();
+        var dataLocaltionMap = new Object();
         function timeStampstoDateTime(timeStamps) {
             let time = new Date(timeStamps * 1000).toLocaleDateString("vi-VN");
             let date = new Date(timeStamps * 1000).toLocaleTimeString("vi-VN");
@@ -347,32 +368,38 @@
         function getMyGeoLocation() {
             var wpid = navigator.geolocation.getCurrentPosition(SendParamPosition, showError);
         }
+        function loadNewData() {
+            $(".layout-content").hide();
+            $("#spinner-bs4").show();
+            $('.spinner-border').show();
+            $.ajax({
+                type: 'GET',
+                url: '/current-weather-by-location',
+                data: dataLocaltionMap,
+                success: result => {
+                    setValueTableCurrentWeather(result);
+                    $('.spinner-border').hide();
+                    $("#spinner-bs4").hide();
+                    $.ajax({
+                        type: 'GET',
+                        url: '/forecast-weather-by-location',
+                        data: dataLocaltionMap,
+                        success: result => {
+                            let html = "";
+                            let content = addContentHtmlForForecast(result.list, html);
+                            $("#table-body-forecast5").html(content);
+                        }
+                    });
+                    $(".layout-content").show();
+                },
+                error: () => {
+                    $('.spinner-border').hide();
+                    $("#spinner-bs4").hide();
+                }
+            });
+        }
         $(() => {
             getMyGeoLocation();
-            /* if (dataLocaltion.lat != undefined) {
-                $.ajax({
-                    type: 'GET',
-                    url: '/current-weather-by-location',
-                    data: dataLocaltion,
-                    success: result => {
-                        setValueTableCurrentWeather(result);
-                        $(".layout-content").show();
-                    }
-                });
-                $.ajax({
-                    type: 'GET',
-                    url: '/forecast-weather-by-location',
-                    data: dataLocaltion,
-                    success: result => {
-                        let html = "";
-                        let content = addContentHtmlForForecast(result.list, html);
-                        $("#table-body-forecast5").html(content);
-                    }
-                });
-
-            } else {
-                alert('Vui lòng cho phép trình duyệt truy cập vị trí của bạn, sau đó reload trang này!');
-            } */
         });
         $("#btn-getlocal").click(() => {
             if (dataLocaltion.lat != undefined) {
@@ -453,7 +480,7 @@
                     }
                 });
 
-            }else{
+            } else {
                 alert("Vui lòng nhập thành phố hoặc địa điểm cần tìm!")
             }
         });
@@ -481,6 +508,96 @@
             });
         }
     </script>
+    <script>
+        var map;
+        function initMap() {
+            var lat1 = 21.03;
+            var lon1 = 105.76;
+            var myLatLng = { lat: lat1, lng: lon1 };
+            if (dataLocaltion.lat != undefined) {
+                myLatLng = { lat: dataLocation.lat, lng: dataLocation.lon }
+            }
+            let getForecastWindow = new google.maps.InfoWindow({ position: myLatLng });
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: myLatLng,
+                zoom: 12,
+                gestureHandling: 'cooperative'
+            });
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map
+            });
+            let infoWindow = new google.maps.InfoWindow();
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    marker.setPosition(pos);
+                    marker.setMap(map);
+                    map.setCenter(pos);
+                    infoWindow.setContent("Vị trí của bạn: (" + pos.lat + ", " + pos.lng + ")");
+                    infoWindow.open(map, marker);
+                }, function () {
+                    handleLocationError(true, marker, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, marker, map.getCenter());
+            }
+            map.addListener('click', mapsMouseEvent => {
+                getForecastWindow.close();
+                getForecastWindow = new google.maps.InfoWindow({ position: mapsMouseEvent.latLng });
+                let ContentHtml = '<button type="button" id = "buttonMap" onclick = "loadNewData();"class="btn btn-success">Bấm để xem thời tiết tại đây</button>'
+                getForecastWindow.setContent(ContentHtml);
+                getForecastWindow.open(map);
+                dataLocaltionMap.lat = mapsMouseEvent.latLng.lat();
+                dataLocaltionMap.lon = mapsMouseEvent.latLng.lng();
+            });
+            marker.addListener('click', mapsMouseEvent => {
+                /* let infoWindow = new google.maps.InfoWindow({ position: mapsMouseEvent.latLng }); */
+                infoWindow.close();
+                infoWindow = new google.maps.InfoWindow({ position: mapsMouseEvent.latLng });
+                let Content = "Vị trí của bạn: " + mapsMouseEvent.latLng
+                infoWindow.setContent(Content);
+                infoWindow.open(map, marker);
+            });
+        }
+        function handleLocationError(browserHasGeolocation, marker, pos) {
+            marker.setMap(null);
+        }
+
+    </script>
+    <script type="text/javascript">
+        $('#btnToggleMap').click(() => {
+            $('#map').toggle("medium");
+        });
+    </script>
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v7.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+    <!-- Your Chat Plugin code -->
+    <div class="fb-customerchat" attribution=setup_tool page_id="109420317439292" theme_color="#0084ff"
+        logged_in_greeting="Chào bạn, đây là bot chat của Lê Anh Đức?"
+        logged_out_greeting="Chào bạn, đây là bot chat của Lê Anh Đức?">
+    </div>
 </body>
 
 </html>

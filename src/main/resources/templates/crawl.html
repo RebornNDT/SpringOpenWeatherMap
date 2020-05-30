@@ -325,7 +325,7 @@
             	let infoWindow = new google.maps.InfoWindow({ position: mapsMouseEvent.latLng });
             	let Content = /*[[${diadiem}]]*/ "New York"
             	infoWindow.setContent(Content);
-                infoWindow.open(map);
+                infoWindow.open(map,marker);
             });
             map.addListener('click', mapsMouseEvent => {
             	getForecastWindow.close();
@@ -337,6 +337,29 @@
             })
         }
     </script>
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v7.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+    <!-- Your Chat Plugin code -->
+    <div class="fb-customerchat" attribution=setup_tool page_id="109420317439292" theme_color="#0084ff"
+        logged_in_greeting="Chào bạn, đây là bot chat của Lê Anh Đức?"
+        logged_out_greeting="Chào bạn, đây là bot chat của Lê Anh Đức?">
+    </div>
 </body>
 
 </html>

@@ -9,4 +9,8 @@ public class MainController {
 	public String index() {
 		return "index";
 	}
+	@GetMapping("/bookmark")
+	public String bookmark_view() {
+		return "bookmark";
+	}
 }

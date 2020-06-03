@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <title>Bookmark</title>
+    <style>
+        .form-search {
+            margin-top: 30px;
+        }
+
+        .banner {
+            color: #e9ebec;
+            text-align: center;
+            height: 251px;
+            background: url(https://openweathermap.org/themes/openweathermap/assets/img/slide-1.jpg) no-repeat;
+        }
+
+        .layout-content {
+            margin-top: 30px;
+        }
+
+        #temp-hourly {
+            border-radius: 10px;
+        }
+
+        .table-forecast {
+            margin-top: 65px;
+        }
+
+        .table td {
+            vertical-align: inherit !important;
+        }
+
+        .layout-content {
+            display: none;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            z-index: 9999;
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            line-height: 30px;
+            background: #f5f5f5;
+            color: #444;
+            cursor: pointer;
+            border: 0;
+            border-radius: 2px;
+            text-decoration: none;
+            transition: opacity 0.2s ease-out;
+            opacity: 0;
+        }
+
+        #back-to-top:hover {
+            background: #e9ebec;
+        }
+
+        #back-to-top.show {
+            opacity: 1;
+        }
+
+        footer {
+            margin-top: 30px;
+        }
+
+        @media (max-width: 574px) {
+            .ghi-de-row {
+                margin-right: 0px !important;
+                margin-left: 0px !important;
+            }
+        }
+
+        .animate-bottom {
+            position: relative;
+            -webkit-animation-name: animatebottom;
+            -webkit-animation-duration: 1s;
+            animation-name: animatebottom;
+            animation-duration: 1s
+        }
+
+        @-webkit-keyframes animatebottom {
+            from {
+                bottom: -100px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0px;
+                opacity: 1
+            }
+        }
+
+        @keyframes animatebottom {
+            from {
+                bottom: -100px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0;
+                opacity: 1
+            }
+        }
+
+        .loader-animator {
+            margin-top: 50px;
+            display: none;
+        }
+
+        .spinner-border {
+            display: none;
+        }
+
+        #map {
+            height: 550px;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/crawl">Trang crawl</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Project khác
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+            </ul>
+            <!-- <form class="form-inline my-2 my-lg-0">
+                <button class="btn btn-outline-success my-2 my-sm-0" id="buttonSetting" data-toggle="modal"
+                    data-target="#exampleModal" type="button"><i class="fas fa-cogs"></i> Cài đặt</button>
+            </form> -->
+        </div>
+    </nav>
+    <section class="banner" style="text-align: center;">
+        <br>
+        <br>
+        <h3>DEMO DỰ BÁO THỜI TIẾT</h3>
+        <h3>Dữ liệu thời tiết của hơn 37000 thành phố trên khắp thế giới</h3>
+    </section>
+    <div class="container">
+        <h3 style="text-align: center;margin-top: 20px; margin-bottom: 20px;">Thông tin thời tiết đã lưu</h3>
+        <div class="row">
+
+            <div class="col-md-12" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); border-radius: 10px; padding-top: 20px; padding-bottom: 20px;">
+                                
+                    <table id="myTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Địa điểm</th>
+                                <th>Thời gian lưu</th>
+                                <th>Nhiệt độ</th>
+                                <th>Tốc độ gió</th>
+                                <th>Tỉ lệ mây</th>
+                                <th>Áp suất</th>
+                                <th>Độ ẩm</th>
+                                <th>Tọa độ</th>
+                                <th>Quản lý</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Id</th>
+                                <th>Địa điểm</th>
+                                <th>Thời gian lưu</th>
+                                <th>Nhiệt độ</th>
+                                <th>Tốc độ gió</th>
+                                <th>Tỉ lệ mây</th>
+                                <th>Áp suất</th>
+                                <th>Độ ẩm</th>
+                                <th>Tọa độ</th>
+                                <th>Quản lý</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                
+            </div>
+
+
+        </div>
+    </div>
+    <!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn có muốn xóa không ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" id = "btnSubmit">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script>
+    	var id;
+        $(document).ready(function () {
+            var table = $('#myTable').DataTable({
+                "ajax": "/data-bookmark",
+                "columnDefs": [{
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button type="button" class="btn btn-danger" id = "btnDelete" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> Xóa</button>'
+                }]
+            });
+            
+            $('#myTable tbody').on('click', '#btnDelete', function () {
+                var data = table.row($(this).parents('tr')).data();
+                id = data[0];
+            });
+            
+            $("#btnSubmit").click(()=>{
+            	$.ajax({
+                    url: '/delete-bookmark?id='+id,
+                    type: 'post',
+                    success: result =>{
+                        alert(result);
+                        table.ajax.reload();
+                        $('#deleteModal').modal('hide');
+                    },
+                    error: ()=>{
+                        alert("Xóa không thành công!");
+                        $('#deleteModal').modal('hide');
+                    }
+                });
+            });
+        });
+        
+        
+    </script>
+</body>
+
+</html>

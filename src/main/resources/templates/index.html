@@ -138,15 +138,15 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/">Trang chủ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="/crawl">Trang crawl</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
+                        Project khác
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="#">Action</a>
@@ -154,9 +154,6 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
@@ -217,7 +214,7 @@
                 <h3 class="city-temp">
                     <img class="weather-widget__img" src="https://openweathermap.org/img/wn/04n@2x.png"
                         alt="Weather Hanoi , VN" width="50" height="50">
-                    <p style="display: inline" class="temp-now">28 °C</p>
+                    <p style="display: inline" class="temp-now">28 °C</p> <button type="button" id = "btnBookmark" class="btn btn-info" alt = "lưu thời tiết hiện tại"><i class="fas fa-bookmark"></i></button>
                 </h3>
                 <table class="table table-bordered table-striped">
                     <tbody>
@@ -323,6 +320,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALyG89PJNAflSxuoi0BFptvSkRdTSjpaA&callback=initMap"
         async defer></script>
     <script>
+        var diadiem, nhietdo, tocdogio, may, apsuat, toado, doam;
         var geo_options = {
             enableHighAccuracy: true,
             maximumAge: 30000,
@@ -341,15 +339,22 @@
             return parseInt(valNum - 273.15);
         }
         function setValueTableCurrentWeather(result) {
+            diadiem = result.name;
             $(".city-name").html('Thời tiết ở ' + result.name + ' hiện tại');
             $("#current-wind-speed").html(result.wind.speed + ' m/s, (' + result.wind.deg + ')');
+            tocdogio = result.wind.speed + ' m/s, (' + result.wind.deg + ')';
             $('.temp-now').html(temperatureConverter(result.main.temp) + ' °C');
+            nhietdo = temperatureConverter(result.main.temp) + ' °C';
             $("#current-cloud").html(result.clouds.all + ' %');
+            may =result.clouds.all + ' %';
             $("#current-apxuat").html(result.main.pressure + ' Hpa');
+            apsuat = result.main.pressure + ' Hpa';
             $("#current-doam").html(result.main.humidity + ' %');
+            doam =result.main.humidity + ' %';
             $("#current-binhminh").html(new Date(result.sys.sunrise * 1000).toLocaleTimeString("vi-VN"));
             $("#current-hoanghon").html(new Date(result.sys.sunset * 1000).toLocaleTimeString("vi-VN"));
             $("#current-toado").html('[' + result.coord.lat + ',' + result.coord.lon + ']');
+            toado = '[' + result.coord.lat + ',' + result.coord.lon + ']';
             $(".weather-widget__img").attr("src", "https://openweathermap.org/img/wn/" + result.weather[0].icon + "@2x.png");
             $("#title-layout").html('Dự báo thời tiết hiện tại ở ' + result.name);
             $("#title-forecast-5day").html('Dự báo thời tiết mỗi 3 giờ 5 ngày tiếp theo tại ' + result.name);
@@ -611,6 +616,29 @@
                 },
                 error: () => {
                     alert("Có lỗi xảy ra, thử lại sau!");
+                }
+            });
+        });
+        $('#btnBookmark').click(()=>{
+            let obj = new Object();
+            obj.diadiem = diadiem;
+            let d = new Date();
+            obj.thoigianluu = d.getDate().toString() +'/'+d.getMonth()+'/'+d.getFullYear()+'/'+d.toLocaleTimeString("vi-VN");
+            obj.nhietdo = nhietdo;
+            obj.tocdogio = tocdogio;
+            obj.may = may;
+            obj.apsuat = apsuat;
+            obj.doam = doam;
+            obj.toado = toado;
+            $.ajax({
+                url: '/insert-bookmark',
+                type: 'post',
+                data: obj,
+                success: result =>{
+                    alert(result);
+                },
+                error: xhr=>{
+                    alert("có lỗi xảy ra, vui lòng thử lại!");
                 }
             });
         });

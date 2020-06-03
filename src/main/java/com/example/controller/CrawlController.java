@@ -9,15 +9,23 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.entities.BookMark;
+import com.example.entities.CrawlData;
 import com.example.modelobj.RowForecast;
+import com.example.repository.CrawlDataRepository;
 
 @Controller
 public class CrawlController {
+	@Autowired
+	CrawlDataRepository repo;
 	@GetMapping("/crawler")
 	public String craw(Model model, @RequestParam(name = "lat",defaultValue = "40.7146") String lat, @RequestParam(name = "lon",defaultValue = "-74.0071") String lon) throws IOException {
 		Connection conn = Jsoup.connect("https://forecast.weather.gov/MapClick.php?lat="+lat+"&lon="+lon);
@@ -60,5 +68,29 @@ public class CrawlController {
 		}else {
 			return "crawlerror";
 		}
+	}
+	@GetMapping("/bookmark-crawl")
+	public String listBookmark(Model model) {
+		Iterable<CrawlData> crawls = this.repo.findAll();
+		List<CrawlData> temp = new ArrayList<CrawlData>();
+		for (CrawlData crawlData : crawls) {
+			temp.add(crawlData);
+		}
+		model.addAttribute("items",temp);
+		return "bookmark-crawl";
+	}
+	@GetMapping("/bookmark-crawl/{id}")
+	@ResponseBody
+	public String detail(@PathVariable("id") String id) {
+		Iterable<CrawlData> temps = this.repo.findAll();
+		CrawlData cr = new CrawlData();
+		for (CrawlData crawlData : temps) {
+			if(crawlData.getId() == Long.valueOf(id)) {
+				cr = crawlData;
+				break;
+			}
+		}
+		String contentHtml = "<!DOCTYPE html>" + cr.getHtml();
+		return contentHtml;
 	}
 }

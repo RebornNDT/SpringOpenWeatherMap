@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -176,67 +176,27 @@
         <h3>Dữ liệu thời tiết của hơn 37000 thành phố trên khắp thế giới</h3>
     </section>
     <div class="container">
-        <h3 style="text-align: center;margin-top: 20px; margin-bottom: 20px;">Thông tin thời tiết đã lưu</h3>
+        <h3 style="text-align: center;margin-top: 20px; margin-bottom: 20px;">Thông tin thời tiết đã lưu (Crawler)</h3>
         <div class="row">
 
-            <div class="col-md-12" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); border-radius: 10px; padding-top: 20px; padding-bottom: 20px;">
-                                
-                    <table id="myTable" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Địa điểm</th>
-                                <th>Thời gian lưu</th>
-                                <th>Nhiệt độ</th>
-                                <th>Tốc độ gió</th>
-                                <th>Tỉ lệ mây</th>
-                                <th>Áp suất</th>
-                                <th>Độ ẩm</th>
-                                <th>Tọa độ</th>
-                                <th>Quản lý</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Id</th>
-                                <th>Địa điểm</th>
-                                <th>Thời gian lưu</th>
-                                <th>Nhiệt độ</th>
-                                <th>Tốc độ gió</th>
-                                <th>Tỉ lệ mây</th>
-                                <th>Áp suất</th>
-                                <th>Độ ẩm</th>
-                                <th>Tọa độ</th>
-                                <th>Quản lý</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                
-            </div>
+            <th:block th:each="item : ${items}">
+
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title" th:utext="'Bài viết có id = '+${item.id}+' lưu vào: '+${item.time}">Special title treatment</h5>
+                            <a th:href="@{'bookmark-crawl/'+${item.id}}" class="btn btn-primary">Mở tin</a>
+                        </div>
+                    </div>
+                </div>
+
+            </th:block>
+
 
 
         </div>
     </div>
-    <!-- Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Bạn có muốn xóa không ?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary" id = "btnSubmit">Xóa</button>
-      </div>
-    </div>
-  </div>
-</div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -245,42 +205,6 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script>
-    	var id;
-        $(document).ready(function () {
-            var table = $('#myTable').DataTable({
-                "ajax": "/data-bookmark",
-                "columnDefs": [{
-                    "targets": -1,
-                    "data": null,
-                    "defaultContent": '<button type="button" class="btn btn-danger" id = "btnDelete" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> Xóa</button>'
-                }]
-            });
-            
-            $('#myTable tbody').on('click', '#btnDelete', function () {
-                var data = table.row($(this).parents('tr')).data();
-                id = data[0];
-            });
-            
-            $("#btnSubmit").click(()=>{
-            	$.ajax({
-                    url: '/delete-bookmark?id='+id,
-                    type: 'post',
-                    success: result =>{
-                        alert(result);
-                        table.ajax.reload();
-                        $('#deleteModal').modal('hide');
-                    },
-                    error: ()=>{
-                        alert("Xóa không thành công!");
-                        $('#deleteModal').modal('hide');
-                    }
-                });
-            });
-        });
-        
-        
-    </script>
 </body>
 
 </html>

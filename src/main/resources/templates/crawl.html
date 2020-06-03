@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
         integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <style>
+    	b{
+    		margin-left: 3px;
+    	}
         .banner {
             color: #e9ebec;
             text-align: center;
@@ -85,7 +88,13 @@
                     <a class="nav-link" href="https://leanhduc-forecast.herokuapp.com/">Trang chủ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://leanhduc-forecast.herokuapp.com/crawl">Trang crawl</a>
+                    <a class="nav-link" href="https://leanhduc-forecast.herokuapp.com/crawler">Trang crawl</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://leanhduc-forecast.herokuapp.com/bookmark">Thời tiết đã lưu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://leanhduc-forecast.herokuapp.com/bookmark-crawl">Thời tiết đã lưu - 2</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -120,6 +129,8 @@
                     <h2 class="panel-title" th:utext="${diadiem}">SAN FRANCISCO DOWNTOWN (SFOC1)</h2>
                     <span class="smallTxt" th:utext="${locationHtml}"><b>Vĩ độ:&nbsp;</b>37.77056°N <b>Kinh
                             độ:&nbsp;</b>122.42694°W <b>Elev:&nbsp;</b>150ft.</span>
+                      <br>
+                     <button type="button" id = "btnBookmark" class="btn btn-info" alt = "lưu thời tiết hiện tại"><i class="fas fa-bookmark"></i></button>
                 </div>
             </div>
             <div class="col-md-4">
@@ -306,6 +317,25 @@
         crossorigin="anonymous"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALyG89PJNAflSxuoi0BFptvSkRdTSjpaA&callback=initMap"
         async defer></script>
+     <script type="text/javascript">
+     	$('#btnBookmark').click(()=>{
+     		let obj = new Object();
+     		let d = new Date();
+            obj.time = d.getDate().toString() +'/'+d.getMonth()+'/'+d.getFullYear()+'/'+d.toLocaleTimeString("vi-VN");
+            obj.html = document.documentElement.outerHTML;
+            $.ajax({
+            	url: 'https://leanhduc-forecast.herokuapp.com/insert-html',
+            	type: 'post',
+            	data: obj,
+            	success: result=>{
+            		alert(result);
+            	},
+            	error: ()=>{
+            		alert("Có lỗi xảy ra");
+            	}
+            });
+     	});
+     </script>
     <script th:inline="javascript">
         var map;
         function initMap() {

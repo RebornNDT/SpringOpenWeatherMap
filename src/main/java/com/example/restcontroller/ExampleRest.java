@@ -13,8 +13,13 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.autopost.AutoPost;
+import com.example.classbean.Schedule;
 
 @RestController
 public class ExampleRest {
@@ -48,5 +53,10 @@ public class ExampleRest {
 //            }
             String result = EntityUtils.toString(entity);
             return result;
+	}
+	@PostMapping("/setSchedule")
+	public String setTimeAutoPost(@RequestParam(name = "time", defaultValue = "3") String time) {
+		Schedule.fixedRate = Integer.valueOf(time) * 60 * 60 * 1000;
+		return "set time auto post facebook mỗi "+time+" tiếng thành công!";
 	}
 }

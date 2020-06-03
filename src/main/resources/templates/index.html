@@ -159,10 +159,10 @@
                     <a class="nav-link disabled" href="#">Disabled</a>
                 </li>
             </ul>
-            <!-- <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form> -->
+            <form class="form-inline my-2 my-lg-0">
+                <button class="btn btn-outline-success my-2 my-sm-0" id="buttonSetting" data-toggle="modal"
+                    data-target="#exampleModal" type="button"><i class="fas fa-cogs"></i> Cài đặt</button>
+            </form>
         </div>
     </nav>
     <section class="banner" style="text-align: center;">
@@ -277,6 +277,36 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cài đặt</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Tự động đăng bài lên Facebook mỗi</label>
+                        <select class="form-control" id="setTimeAutoPost">
+                            <option value="1">1 tiếng</option>
+                            <option value="3">3 tiếng</option>
+                            <option value="6">6 tiếng</option>
+                            <option value="12">12 tiếng</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="submitSetTime" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <p style="text-align: center;">© 2020 Copyright: Lê Anh Đức</p>
@@ -570,6 +600,19 @@
     <script type="text/javascript">
         $('#btnToggleMap').click(() => {
             $('#map').toggle("medium");
+        });
+        $('#submitSetTime').click(() => {
+            let link = '/setSchedule?time=' + $('#setTimeAutoPost').val();
+            $.ajax({
+                type: 'post',
+                url: link,
+                success: data => {
+                    alert(data);
+                },
+                error: () => {
+                    alert("Có lỗi xảy ra, thử lại sau!");
+                }
+            });
         });
     </script>
     <!-- Load Facebook SDK for JavaScript -->

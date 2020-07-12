@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 
 public class FbToken {
 	//token này sống trong 60 ngày tính từ 15-05-2020
-	public static String LONG_LIVED_USER_TOKEN = "EAAQBdEtHIX4BAC6Tk46ttUCKi2c9lyrBcDLsK2az0rwVGNQLchVgfrYZCiOIzCASQy0DzgcjxGosiC03q50ZBpJ7KpQrhRL9uGuk5G1dDrizu2fZC7wap2CR373BZCErqgmkIGNgR2uEQycEKqM1rr1YCZBZBbvyI77dlA8YNRiuGlicXUDxJi";
+	public static String LONG_LIVED_USER_TOKEN = "EAAQBdEtHIX4BAI7T49ZBxviZCDZAp0nwzGrIdvVU31ZBGZCaVXE2DK6oBjZCNWuSyDvZAQ3Go0EgrQaEyTsvT2e0af3lzOMJd7ZBbUhp9LYxThohWR5ZAQpj4A0ZAeYwW82Onc5NPrCKE1kOu3NsGo1owtybYIaxZBxhXfUGqXKYn97XFbMKLe2gWDA";
 	//ID của User Lê Đức
 	public static String USER_ID = "103313298057613";
 	//ID của fanpage "Cập nhât thời tiết Hà Nội"
